@@ -1,0 +1,17 @@
+{
+  "name": "onnxruntime",
+  "version-string": "1.7.0",
+  "description": "ONNX Runtime is a cross-platform inference and training machine-learning accelerator compatible with deep learning frameworks, PyTorch and TensorFlow/Keras, as well as classical machine learning libraries such as scikit-learn, and more.",
+  "homepage": "https://www.onnxruntime.ai/",
+  "supports": "(x64 & windows & !uwp) | (x64 & linux)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
