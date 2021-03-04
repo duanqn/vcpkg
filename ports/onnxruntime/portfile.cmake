@@ -11,10 +11,15 @@ vcpkg_from_github(
 )
 
 set(SCRIPT_FILE ${SOURCE_PATH}/tools/ci_build/build.py)
+set(CONFIG Release)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(SHELL powershell -Command)
     set(COMMAND_PREFIX &)
+    set(PUBLISH_PREFIX onnxruntime)
+endif()
+if(VCPKG_TARGET_IS_LINUX)
+    set(PUBLISH_PREFIX libonnxruntime)
 endif()
 
 
@@ -52,10 +57,21 @@ execute_process(
 )
 
 vcpkg_execute_required_process(
-    COMMAND ${SHELL} ${COMMAND_PREFIX} ${PYTHON3} ${SCRIPT_FILE} --parallel --config Release --build_shared_lib --build_dir ${SOURCE_PATH}/build --skip_submodule_sync --cmake_generator "Ninja" --skip_tests
+    COMMAND ${PYTHON3} ${SCRIPT_FILE} --parallel --config ${CONFIG} --build_shared_lib --build_dir ${SOURCE_PATH}/build --skip_submodule_sync --cmake_generator "Ninja" --skip_tests
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME build
 )
 
-file(COPY ${SOURCE_PATH}/include ${CURRENT_PACKAGES_DIR}/include)
+# Copy headers
+file(COPY ${SOURCE_PATH}/include/onnxruntime/core/session/*.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/include/onnxruntime/core/providers/cpu/*.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+# Copy libraries
+file(COPY ${SOURCE_PATH}/build/${CONFIG}/${PUBLISH_PREFIX}.* DESTINATION ${CURRENT_PACKAGES_DIR}/lib FOLLOW_SYMLINK_CHAIN)
+
+# Copy some text work
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/onnxruntime/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/ThirdPartyNotices.txt ${CURRENT_PACKAGES_DIR}/share/onnxruntime/ThirdPartyNotices.txt COPYONLY)
+configure_file(${SOURCE_PATH}/VERSION_NUMBER ${CURRENT_PACKAGES_DIR}/share/onnxruntime/VERSION_NUMBER COPYONLY)
+configure_file(${SOURCE_PATH}/docs/Privact.md ${CURRENT_PACKAGES_DIR}/share/onnxruntime/Privact.md COPYONLY)
+configure_file(${SOURCE_PATH}/README.md ${CURRENT_PACKAGES_DIR}/share/onnxruntime/README.md COPYONLY)
