@@ -52,7 +52,7 @@ execute_process(
 )
 
 vcpkg_execute_required_process(
-    COMMAND ${SHELL} ${COMMAND_PREFIX} ${PYTHON3} ${SCRIPT_FILE} --parallel --config Release --build_shared_lib --build_dir ${SOURCE_PATH}/build --skip_submodule_sync --cmake_generator "Ninja"
+    COMMAND ${SHELL} ${COMMAND_PREFIX} ${PYTHON3} ${SCRIPT_FILE} --parallel --config Release --build_shared_lib --build_dir ${SOURCE_PATH}/build --skip_submodule_sync --cmake_generator "Ninja" --skip_tests
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME build
 )
