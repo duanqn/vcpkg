@@ -56,3 +56,6 @@ vcpkg_execute_required_process(
     WORKING_DIRECTORY ${SOURCE_PATH}
     LOGNAME build
 )
+
+file(COPY ${SOURCE_PATH}/include ${CURRENT_PACKAGES_DIR}/include)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/onnxruntime/copyright COPYONLY)
